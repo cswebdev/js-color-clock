@@ -66,10 +66,10 @@ function responsiveClock() {
   // setting up progress bar conditions. Got some tips on how to set up the progress bar
 
   var barTimer = currentDate.getSeconds();
-
+  const barProgress = barTimer / 60;
   let barWidth = 120;
   let responsiveWidth = barWidth * barProgress;
-  const barProgress = barTimer / 60;
+
   // adding stlying to affect the html through javascript. Creating responsive progress bar
 
   clockProgressBar.setAttribute("style", "width" + responsiveWidth + "px");
@@ -77,15 +77,15 @@ function responsiveClock() {
 
   // using a querySelector to call the class .clock from HTML and assigning values and attributes
   const clockColors = document.querySelector(".clock");
-  var color1 = Math.floor(Math.random() * 254);
+  var color1 = Math.floor(Math.random() * 244);
   clockColors.setAttribute(
     "style",
     "background:rgb(" +
       color1 +
       "," +
-      Math.random() * 254 +
+      Math.random() * 244 +
       "," +
-      Math.random() * 254 +
+      Math.random() * 244 +
       ")"
   );
 
