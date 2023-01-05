@@ -1,95 +1,73 @@
-// The goal of this script is to create a clock that has a hover effect, a background that changes color, and a progress bar
+// this function calls itself and is an IFIE function.
 
-// I also got some pointers from a full stack dev friend on how to improve my code & readability.
+(function () {
+  "use strict";
 
-// Assigning two variables as constants which target  div classes in index.html
-function responsiveClock() {
-  const clockDisplay = document.querySelector(".clock-display");
+  //  thee are queryselectors that target specific class elements in index.html
 
-  var currentDate = new Date();
+  const $display = document.querySelector(".clock-display");
+  const $progressBar = document.querySelector(".clock-progress-bar");
+  const $clock = document.querySelector(".clock");
+
+  // setting hover to false by default
+  let isHovering = false;
+
+  // setting up the mouse over commands with EventListners.
+
+  $clock.addEventListener("mouseover", function () {
+    isHovering = true;
+  });
+
+  $clock.addEventListener("mouseout", function () {
+    isHovering = false;
+  });
+
+  // setInterval is used to create a timed loop
+
   setInterval(function () {
-    // New Date()  gets the current time from users device and assigns it to currentDate
-    var currentDate = new Date();
+    // Date() is a built in Javascript Consructor. BUT. Date returns a string instead of an array.
+    const currentTime = new Date();
 
-    // This searches innerHTMl for class named .clock-dispay by using const clockDisplay
-    clockDisplay.innerHTML =
-      // isolating currentDate.getHours and converting it from 24hr format to 12hr directly after initalization.
-      ((currentDate.getHours() + 24) % 12 || 12) +
-      ":" +
-      currentDate.getMinutes() +
-      ":" +
-      currentDate.getSeconds();
+    // seconds minutes hours are
+    let seconds, minutes, hours;
+
+    // The slice() method extracts a section of a string and returns it as a new string, without modifying the original string.
+
+    // using an if else statment to create the logic associated with the hover animations.
+
+    if (isHovering) {
+      seconds = ("0" + currentTime.getSeconds().toString(16)).slice(-2);
+      minutes = ("0" + currentTime.getMinutes().toString(16)).slice(-2);
+      hours = ("0" + currentTime.getHours().toString(16)).slice(-2);
+    } else {
+      seconds = ("0" + currentTime.getSeconds()).slice(-2);
+      minutes = ("0" + currentTime.getMinutes()).slice(-2);
+      hours = ("0" + currentTime.getHours()).slice(-2);
+    }
+
+    $progressBar.style.width = `${(seconds / 60) * 14}rem`;
+
+    // You can use textContent OR .innerHTML. But textContent is prefered becuase it has better performance
+
+    // use the backticks and this creates a string with the getSeconds-Minutes-Hours
+    // backticks are Template literals and it's called string interpolation. To create strings by using substitution placeholders
+
+    $display.textContent = `${hours}:${minutes}:${seconds}`;
+
+    // Using querySelector again to target the background of the clock. This uses Math.random to get a random number between 0-244.
+
+    const clockColors = document.querySelector(".clock");
+    var color1 = Math.floor(Math.random() * 244);
+    clockColors.setAttribute(
+      "style",
+      "background:rgb(" +
+        color1 +
+        "," +
+        Math.random() * 244 +
+        "," +
+        Math.random() * 244 +
+        ")"
+      //setting how often, in seconds,  the root function
+    );
   }, 1000);
-
-  // I had to repeat new Date outside of the function above. CurrentDate stated undefined
-  //fixed currently with this. May change in the future.
-
-  var currentDate = new Date();
-
-  // Repeating on assigning currentDate but with Hex units. Also converting the time into a string.
-
-  let hexHours = currentDate.getHours().toString(16).padStart(2, "0");
-  let hexMinutes = currentDate.getMinutes().toString(16).padStart(2, "0");
-  let hexSeconds = currentDate.getSeconds().toString(16).padStart(2, "0");
-
-  // Creating an event viewer for the hover effects. and also assigning hoverActive as false by default.
-
-  var hoverActive = false;
-
-  clockDisplay.addEventListener("mouseover", () => {
-    hoverActive = true;
-  });
-
-  clockDisplay.addEventListener("mouseout", () => {
-    hoverActive = false;
-  });
-
-  // Using strict equality to to compare if value and type are false, then display clock
-
-  if (hoverActive === false) {
-    clockDisplay.innerHTML =
-      currentDate.getHours() +
-      ":" +
-      currentDate.getMinutes() +
-      ":" +
-      currentDate.getSeconds();
-  } else {
-    //  settting up the mouse over event. Converting hex units into strings for display
-
-    clockDisplay = `#${hexHours}:${hexMinutes}:${hexSeconds}`;
-  }
-
-  // creating a querySelector to find the class of .clock-progress-bar from index.html
-
-  const clockProgressBar = document.querySelector(".clock-progress-bar");
-
-  // setting up progress bar conditions. Got some tips on how to set up the progress bar
-
-  var barTimer = currentDate.getSeconds();
-  const barProgress = barTimer / 60;
-  let barWidth = 120;
-  let responsiveWidth = barWidth * barProgress;
-
-  // adding stlying to affect the html through javascript. Creating responsive progress bar
-
-  clockProgressBar.setAttribute("style", "width" + responsiveWidth + "px");
-  clockProgressBar.clientWidth = clockProgressBar.clientWidth * barProgress;
-
-  // using a querySelector to call the class .clock from HTML and assigning values and attributes
-  const clockColors = document.querySelector(".clock");
-  var color1 = Math.floor(Math.random() * 244);
-  clockColors.setAttribute(
-    "style",
-    "background:rgb(" +
-      color1 +
-      "," +
-      Math.random() * 244 +
-      "," +
-      Math.random() * 244 +
-      ")"
-  );
-
-  setTimeout(responsiveClock, 1000);
-}
-
-responsiveClock();
+});
