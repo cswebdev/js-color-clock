@@ -70,4 +70,4 @@
       //setting how often, in seconds,  the root function
     );
   }, 1000);
-});
+})();
